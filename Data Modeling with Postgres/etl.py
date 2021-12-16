@@ -4,6 +4,12 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 
+"""
+    This query below defines the get_files command used to find
+    and extract and store information into the correct SQL tables
+    defined in the sql_queries.py file.
+"""
+
 def get_files(filepath):
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -12,6 +18,14 @@ def get_files(filepath):
             all_files.append(os.path.abspath(f))
     
     return all_files
+
+
+"""
+    This procedure below extracts song information from a song file based on the
+    given filepath provided in the get_files argugments. 
+    The information extracted details the song information that then gets
+    filtered and stored into the artists table.
+"""
 
 def process_song_file(cur, filepath):
     # open song file
@@ -27,6 +41,13 @@ def process_song_file(cur, filepath):
     artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']].values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
 
+
+"""
+    This procedure performs an ETL pipeline on the log files provided in the
+    get_files arguements. 
+    The information extracted the time and users dimensional tables and adds 
+    new information to the songplays fact table.
+"""
 
 def process_log_file(cur, filepath):
     # open log file
@@ -69,9 +90,15 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = (index, pd.to_datetime(row.ts, unit='ms'), row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
+        songplay_data = (pd.to_datetime(row.ts, unit='ms'), row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
+"""
+   The function below processes the data based on the cur, conn, filepath, and func
+   commands defined above. process_data reads and abstracts the information in the
+   files in the defined filepaths and iterates through the process until there 
+   is no more data to read over.  
+"""
 
 def process_data(cur, conn, filepath, func):
     # get all files matching extension from directory
