@@ -22,8 +22,8 @@ The log dataset is provided in JSON format from that describes user activity on 
 | COLUMN | TYPE | CONSTAINT |
 | ------ | ---- | --------- |
 | songplay_id | SERIAL | PRIMARY KEY |
-| start_time | TIMESTAMP |
-| user_id | VARCHAR |	
+| start_time | TIMESTAMP | NOT NULL |
+| user_id | VARCHAR | NOT NULL |
 | level | VARCHAR	|
 | song_id |	VARCHAR	|
 | artist_id | VARCHAR	|
@@ -36,7 +36,11 @@ songplay_id is an auto-increment Primary Key.
 Query to insert data:
 ```
 INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+<<<<<<< HEAD
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
+=======
+VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+>>>>>>> 07a21ebdeda81a50be7df47e9fc48a68898f0215
 ```
 
 ## Dimension Table: **users**
