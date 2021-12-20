@@ -36,11 +36,7 @@ songplay_id is an auto-increment Primary Key.
 Query to insert data:
 ```
 INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
-<<<<<<< HEAD
 VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
-=======
-VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
->>>>>>> 07a21ebdeda81a50be7df47e9fc48a68898f0215
 ```
 
 ## Dimension Table: **users**
