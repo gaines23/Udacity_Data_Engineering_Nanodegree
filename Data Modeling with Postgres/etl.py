@@ -4,13 +4,14 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 
-"""
-    This query below defines the get_files command used to find
-    and extract and store information into the correct SQL tables
-    defined in the sql_queries.py file.
-"""
 
 def get_files(filepath):
+    """
+        This query below defines the get_files command used to find
+        and extract and store information into the correct SQL tables
+        defined in the sql_queries.py file.
+    """
+
     all_files = []
     for root, dirs, files in os.walk(filepath):
         files = glob.glob(os.path.join(root,'*.json'))
@@ -20,14 +21,21 @@ def get_files(filepath):
     return all_files
 
 
-"""
-    This procedure below extracts song information from a song file based on the
-    given filepath provided in the get_files argugments. 
-    The information extracted details the song information that then gets
-    filtered and stored into the artists table.
-"""
-
 def process_song_file(cur, filepath):
+    """
+    Description: This function is responsible for listing the files in a directory,
+    and then executing the ingest process for each file according to the function
+    that performs the transformation to save it to the database.
+
+    Arguments:
+        cur: the cursor object.
+        conn: connection to the database.
+        filepath: log data or song data file path.
+        func: function that transforms the data and inserts it into the database.
+
+    Returns:
+        None
+    """
     # open song file
     song_files = get_files("data/song_data")
     filepath = song_files[0]
@@ -42,14 +50,14 @@ def process_song_file(cur, filepath):
     cur.execute(artist_table_insert, artist_data)
 
 
-"""
-    This procedure performs an ETL pipeline on the log files provided in the
-    get_files arguements. 
-    The information extracted the time and users dimensional tables and adds 
-    new information to the songplays fact table.
-"""
-
 def process_log_file(cur, filepath):
+    """
+        This procedure performs an ETL pipeline on the log files provided in the
+        get_files arguements. 
+        The information extracted the time and users dimensional tables and adds 
+        new information to the songplays fact table.
+    """
+
     # open log file
     log_files = get_files("data/log_data")
     filepath = log_files[0]
@@ -63,7 +71,7 @@ def process_log_file(cur, filepath):
     df['ts'] = t
     
     # insert time data records
-    time_data = [t, t.dt.hour, t.dt.day, t.dt.isocalendar().week, t.dt.month, t.dt.year, t.dt.weekday]
+    time_data = [t, t.dt.hour, t.dt.day, t.dt.weekofyear, t.dt.month, t.dt.year, t.dt.weekday]
     column_labels = ('start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday')
     time_df = pd.DataFrame.from_dict(dict(zip(column_labels, time_data)))
 
@@ -93,14 +101,16 @@ def process_log_file(cur, filepath):
         songplay_data = (pd.to_datetime(row.ts, unit='ms'), row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
-"""
-   The function below processes the data based on the cur, conn, filepath, and func
-   commands defined above. process_data reads and abstracts the information in the
-   files in the defined filepaths and iterates through the process until there 
-   is no more data to read over.  
-"""
 
 def process_data(cur, conn, filepath, func):
+
+    """
+    The function below processes the data based on the cur, conn, filepath, and func
+    commands defined above. process_data reads and abstracts the information in the
+    files in the defined filepaths and iterates through the process until there 
+    is no more data to read over.  
+    """
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):

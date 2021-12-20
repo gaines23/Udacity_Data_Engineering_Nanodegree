@@ -35,8 +35,8 @@ The log dataset is provided in JSON format from that describes user activity on 
 songplay_id is an auto-increment Primary Key. 
 Query to insert data:
 ```
-INSERT INTO songplays (songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
-VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
 ```
 
 ## Dimension Table: **users**
@@ -61,7 +61,7 @@ VALUES(%s, %s, %s, %s, %s)
 | title | VARCHAR(50) |
 | artist | VARCHAR |
 | year | INT |
-| duration | FLOAT(5) |	
+| duration | DECIMAL |	
 
 Query to insert data:
 ```

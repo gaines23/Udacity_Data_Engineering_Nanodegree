@@ -38,7 +38,7 @@ song_table_create = ("""
         , title VARCHAR(50)
         , artist_id VARCHAR
         , year INT
-        , duration FLOAT(5)
+        , duration DECIMAL
     )
 """)
 
@@ -67,9 +67,8 @@ time_table_create = ("""
 # INSERT RECORDS
 
 songplay_table_insert = ("""
-    INSERT INTO songplays (songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
+    INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent)
     VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
-    DO NOTHING
 """)
 
 user_table_insert = ("""
